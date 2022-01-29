@@ -170,5 +170,6 @@ const deleteBookByIdHandler = (request, h) => {
 };
 
 module.exports = {
+  // eslint-disable-next-line max-len
   addBookHandler, getAllBooksHandler, getBookByIdHandler, editBookByIdHandler, deleteBookByIdHandler,
 };
