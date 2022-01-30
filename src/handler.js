@@ -6,21 +6,7 @@ const addBookHandler = (request, h) => {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = request.payload;
 
-  const id = nanoid(16);
-  const finished = pageCount === readPage;
-  const insertedAt = new Date().toISOString();
-  const updatedAt = insertedAt;
-
-  const newBook = {
-    // eslint-disable-next-line max-len
-    name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, insertedAt, updatedAt,
-  };
-
-  const isSuccess = books.filter((book) => book.id === id).length > 0;
-  const noName = books.filter((book) => book.name === name).length < 1;
-  const isDifferent = books.filter((book) => book.readPage > book.pageCount);
-
-  if (noName) {
+  if (name === undefined) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. Mohon isi nama buku',
@@ -29,7 +15,7 @@ const addBookHandler = (request, h) => {
     return response;
   }
 
-  if (isDifferent) {
+  if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
@@ -38,7 +24,19 @@ const addBookHandler = (request, h) => {
     return response;
   }
 
+  const id = nanoid(16);
+  const finished = pageCount === readPage;
+  const insertedAt = new Date().toISOString();
+  const updatedAt = insertedAt;
+
+  const newBook = {
+    // eslint-disable-next-line max-len
+    id, name, year, author, summary, publisher, pageCount, readPage, reading, finished, insertedAt, updatedAt,
+  };
+
   books.push(newBook);
+
+  const isSuccess = books.filter((book) => book.id === id).length > 0;
 
   if (isSuccess) {
     const response = h.response({
